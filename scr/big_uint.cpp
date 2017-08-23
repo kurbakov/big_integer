@@ -10,7 +10,6 @@ private:
     void clear();
     void resize(unsigned int);
 
-protected:
     int* value;
     uint64_t buffer;
     uint64_t size;
@@ -26,7 +25,9 @@ public:
     void operator=(unsigned int);
     void operator=(BigUInt&);
 
-    // bool operator==(BigUInt&);
+    void operator<<(BigUInt&);
+
+    bool operator==(BigUInt&);
     // bool operator!=(BigUInt);
     // bool operator>(BigUInt);
     // bool operator>=(BigUInt);
@@ -69,64 +70,92 @@ public:
 }; // namespace
 
 namespace BigNumber{
-
 void BigUInt::clear(){
     for(int i=0; i<size; i++){
-        value[i] = 0;
+        this->value[i] = 0;
     }
 }
 
 void BigUInt::resize(unsigned int new_size){
     int* temp = value;
-    delete value;
-    value = new int[new_size];
-    buffer = new_size;
+    
+    delete this->value;
+    this->value = new int[new_size];
+    
+    this->buffer = new_size;
+    
     clear();
-    for(int i=0; i<size; i++){
-        value[i] = temp[i];
+    for(int i=0; i<this->size; i++){
+        this->value[i] = temp[i];
     }
-    return;
 }
 
 BigUInt::BigUInt(){
-    value = new int[SIZE];
+    this->value = new int[SIZE];
     clear();
-    buffer = SIZE;
-    size = 0;
+    this->buffer = SIZE;
+    this->size = 0;
 }
 
 BigUInt::~BigUInt(){
-    delete value;
+    delete this->value;
 }
 
 void BigUInt::operator=(unsigned int x){
     clear();
-    size = 0;
+    this->size = 0;
     while(x)
     {
-        value[size] = x%BASE;
+        this->value[size] = x%BASE;
         x /= BASE;
-        size++;
+        this->size++;
     }
 }
 
 void BigUInt::operator=(BigUInt & x){
-    buffer = x.get_buffer_length();
-    size = x.get_value_length();
+    this->buffer = x.get_buffer_length();
+    this->size = x.get_value_length();
 
-    delete value;
-    value = new int[buffer];
+    delete this->value;
+    this->value = new int[buffer];
     
     clear();
     for(int i=0; i<size; i++){
-        value[i] = x[i];
+        this->value[i] = x[i];
     }
 }
 
+bool BigUInt::operator==(BigUInt& x){
+    if(this->size != x.get_value_length()){
+        return false;
+    }
+    if(this->buffer != x.buffer){
+        if(this->buffer > x.get_buffer_length()){
+            x.resize(this->buffer);
+        }
+        else{
+            this->resize(x.get_buffer_length());
+        }
+    }
+    for(int i=0; i<this->size; i++){
+        if(this->value[i] != x[i]){
+            return false;
+        }
+    }
+
+    return true;
+}
+// bool operator!=(BigUInt);
+// bool operator>(BigUInt);
+// bool operator>=(BigUInt);
+// bool operator<(BigUInt);
+// bool operator<=(BigUInt);
+
 
 std::string BigUInt::to_string(){
-    if(size == 0)
+    if(size == 0){
         return std::string("0");
+    }
 
     std::string res;
     for(int i=0; i < size; i++){
@@ -146,4 +175,18 @@ int main(){
     BigNumber::BigUInt x;
     x=n;
     std::cout << x.to_string() << "\n";
+
+    if(n==x){
+        std::cout << "true" << "\n";
+    }
+    BigNumber::BigUInt a;
+    a=101;
+    if(n==a){
+        std::cout << "true" << "\n";
+    }
+    else{
+        std::cout << "false" << "\n";
+    }
+
+    return 0;
 }

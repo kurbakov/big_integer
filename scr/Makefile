@@ -1,5 +1,5 @@
 all:
-	g++ big_uint.cpp -Wall -O3 -std=c++14 -o big_uint
+	g++ big_uint.cpp -Wall -O3 -std=c++14 -o main
 
 clean:
-	rm -f big_uint
+	rm -f main
