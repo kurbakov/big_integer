@@ -25,8 +25,6 @@ public:
     void operator=(unsigned int);
     void operator=(BigUInt&);
 
-    void operator<<(BigUInt&);
-
     bool operator==(BigUInt&);
     bool operator!=(BigUInt&);
     bool operator>(BigUInt&);
@@ -34,35 +32,14 @@ public:
     bool operator<(BigUInt&);
     bool operator<=(BigUInt&);
 
-    // BigUInt operator+(const BigUInt right);
-    // BigUInt operator+(const unsigned int right);
+    // BigUInt operator+(const BigUInt& right);
+    // BigUInt operator-(const BigUInt& right);
+    // BigUInt operator*(const BigUInt& right);
+    // BigUInt operator/(const BigUInt& right);
+    // BigUInt operator%(const BigUInt& right);
 
-    // BigUInt operator+=(const BigUInt right);
-    // BigUInt operator+=(const unsigned int right);
-
-    // BigUInt operator-(const BigUInt right);
-    // BigUInt operator-(const unsigned int right);
-
-    // BigUInt operator-=(const BigUInt right);
-    // BigUInt operator-=(const unsigned int right);
-
-    // BigUInt operator*(const BigUInt right);
-    // BigUInt operator*(const unsigned int right);
-
-    // BigUInt operator*=(const BigUInt right);
-    // BigUInt operator*=(const unsigned int right);
-
-    // BigUInt operator/(const BigUInt right);
-    // BigUInt operator/(const unsigned int right);
-
-    // BigUInt operator/=(const BigUInt right);
-    // BigUInt operator/=(const unsigned int right);
-
-    // BigUInt operator%(const BigUInt right);
-    // BigUInt operator%(const unsigned int right);
-
-    // BigUInt operator%=(const BigUInt right);
-    // BigUInt operator%=(const unsigned int right);
+    // ostream &operator<<(BigUInt&);
+    // istream &operator>>(BigUInt&);
 
     std::string to_string();
 };
@@ -149,10 +126,76 @@ bool BigUInt::operator!=(BigUInt& x){
     return false;
 }
 
-bool BigUInt::operator>(BigUInt& x){return true;}
-bool BigUInt::operator>=(BigUInt& x){return true;}
-bool BigUInt::operator<(BigUInt& x){return true;}
-bool BigUInt::operator<=(BigUInt& x){return true;}
+bool BigUInt::operator>(BigUInt& x){
+    if(this->size > x.get_value_length()){
+        return true;
+    }
+    
+    if(this->size < x.get_value_length()){
+        return false;
+    }
+
+    for(int i=this->size-1; i>=0; i--){
+        if(this->value[i] > x[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BigUInt::operator>=(BigUInt& x){
+    if(this->size > x.get_value_length()){
+        return true;
+    }
+    
+    if(this->size < x.get_value_length()){
+        return false;
+    }
+
+    for(int i=this->size-1; i>=0; i--){
+        if(this->value[i] < x[i]){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool BigUInt::operator<(BigUInt& x){
+    if(this->size < x.get_value_length()){
+        return true;
+    }
+    
+    if(this->size > x.get_value_length()){
+        return false;
+    }
+
+    for(int i=this->size-1; i>=0; i--){
+        if(this->value[i] < x[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+bool BigUInt::operator<=(BigUInt& x){
+    if(this->size < x.get_value_length()){
+        return true;
+    }
+    
+    if(this->size > x.get_value_length()){
+        return false;
+    }
+
+    for(int i=this->size-1; i>=0; i--){
+        if(this->value[i] > x[i]){
+            return false;
+        }
+    }
+
+    return true;
+}
 
 
 std::string BigUInt::to_string(){
@@ -171,20 +214,18 @@ std::string BigUInt::to_string(){
 
 
 int main(){
-    BigNumber::BigUInt n;
-    n=100;
-    std::cout << n.to_string() << "\n";
-
-    BigNumber::BigUInt x;
-    x=n;
-    std::cout << x.to_string() << "\n";
-
-    if(n==x){
+    BigNumber::BigUInt x,y,z;
+    x=10;
+    y=10;
+    z=11;
+    if(x>=y){
         std::cout << "true" << "\n";
     }
-    BigNumber::BigUInt a;
-    a=101;
-    if(n==a){
+    else{
+        std::cout << "false" << "\n";
+    }
+
+    if(z>=y){
         std::cout << "true" << "\n";
     }
     else{
