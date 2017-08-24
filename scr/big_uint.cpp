@@ -28,11 +28,11 @@ public:
     void operator<<(BigUInt&);
 
     bool operator==(BigUInt&);
-    // bool operator!=(BigUInt);
-    // bool operator>(BigUInt);
-    // bool operator>=(BigUInt);
-    // bool operator<(BigUInt);
-    // bool operator<=(BigUInt);
+    bool operator!=(BigUInt&);
+    bool operator>(BigUInt&);
+    bool operator>=(BigUInt&);
+    bool operator<(BigUInt&);
+    bool operator<=(BigUInt&);
 
     // BigUInt operator+(const BigUInt right);
     // BigUInt operator+(const unsigned int right);
@@ -129,27 +129,30 @@ bool BigUInt::operator==(BigUInt& x){
     if(this->size != x.get_value_length()){
         return false;
     }
-    if(this->buffer != x.buffer){
-        if(this->buffer > x.get_buffer_length()){
-            x.resize(this->buffer);
-        }
-        else{
-            this->resize(x.get_buffer_length());
-        }
-    }
     for(int i=0; i<this->size; i++){
         if(this->value[i] != x[i]){
             return false;
         }
     }
-
     return true;
 }
-// bool operator!=(BigUInt);
-// bool operator>(BigUInt);
-// bool operator>=(BigUInt);
-// bool operator<(BigUInt);
-// bool operator<=(BigUInt);
+
+bool BigUInt::operator!=(BigUInt& x){
+    if(this->size != x.get_value_length()){
+        return true;
+    }
+    for(int i=0; i<this->size; i++){
+        if(this->value[i] != x[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BigUInt::operator>(BigUInt& x){return true;}
+bool BigUInt::operator>=(BigUInt& x){return true;}
+bool BigUInt::operator<(BigUInt& x){return true;}
+bool BigUInt::operator<=(BigUInt& x){return true;}
 
 
 std::string BigUInt::to_string(){
