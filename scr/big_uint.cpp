@@ -16,27 +16,28 @@ private:
 
 public:
     BigUInt();
+    BigUInt(int*, uint64_t, uint64_t);
     ~BigUInt();
 
-    uint64_t get_buffer_length(){return buffer;}
-    uint64_t get_value_length(){return size;}
-    int operator[](unsigned int i){return value[i];}
+    uint64_t get_buffer_length() const {return buffer;}
+    uint64_t get_value_length() const {return size;}
+    int operator[](unsigned int i) const {return value[i];}
 
     void operator=(unsigned int);
-    void operator=(BigUInt&);
+    void operator=(const BigUInt&);
 
-    bool operator==(BigUInt&);
-    bool operator!=(BigUInt&);
-    bool operator>(BigUInt&);
-    bool operator>=(BigUInt&);
-    bool operator<(BigUInt&);
-    bool operator<=(BigUInt&);
+    bool operator==(BigUInt);
+    bool operator!=(BigUInt);
+    bool operator>(BigUInt);
+    bool operator>=(BigUInt);
+    bool operator<(BigUInt);
+    bool operator<=(BigUInt);
 
-    // BigUInt operator+(const BigUInt& right);
-    // BigUInt operator-(const BigUInt& right);
-    // BigUInt operator*(const BigUInt& right);
-    // BigUInt operator/(const BigUInt& right);
-    // BigUInt operator%(const BigUInt& right);
+    BigUInt operator+(const BigUInt&);
+    BigUInt operator-(const BigUInt&);
+    // BigUInt operator*(BigUInt& right);
+    // BigUInt operator/(BigUInt& right);
+    // BigUInt operator%(BigUInt& right);
 
     // ostream &operator<<(BigUInt&);
     // istream &operator>>(BigUInt&);
@@ -69,9 +70,18 @@ void BigUInt::resize(unsigned int new_size){
 
 BigUInt::BigUInt(){
     this->value = new int[SIZE];
-    clear();
     this->buffer = SIZE;
     this->size = 0;
+}
+
+BigUInt::BigUInt(int* v, uint64_t b, uint64_t s){
+    this->value = v;
+    this->buffer = b;
+    this->size = s;
+
+    for(int i=0; i<b;i++){
+        this->value[i] = v[i];
+    }
 }
 
 BigUInt::~BigUInt(){
@@ -79,7 +89,7 @@ BigUInt::~BigUInt(){
 }
 
 void BigUInt::operator=(unsigned int x){
-    clear();
+    this->clear();
     this->size = 0;
     while(x)
     {
@@ -89,20 +99,21 @@ void BigUInt::operator=(unsigned int x){
     }
 }
 
-void BigUInt::operator=(BigUInt & x){
+void BigUInt::operator=(const BigUInt& x){
     this->buffer = x.get_buffer_length();
     this->size = x.get_value_length();
 
-    delete this->value;
-    this->value = new int[buffer];
-    
-    clear();
-    for(int i=0; i<size; i++){
+    if(this->value != nullptr){
+        delete this->value;
+    }
+    this->value = new int[this->buffer];
+
+    for(int i=0; i<this->size; i++){
         this->value[i] = x[i];
     }
 }
 
-bool BigUInt::operator==(BigUInt& x){
+bool BigUInt::operator==(BigUInt x){
     if(this->size != x.get_value_length()){
         return false;
     }
@@ -114,7 +125,7 @@ bool BigUInt::operator==(BigUInt& x){
     return true;
 }
 
-bool BigUInt::operator!=(BigUInt& x){
+bool BigUInt::operator!=( BigUInt x){
     if(this->size != x.get_value_length()){
         return true;
     }
@@ -126,7 +137,7 @@ bool BigUInt::operator!=(BigUInt& x){
     return false;
 }
 
-bool BigUInt::operator>(BigUInt& x){
+bool BigUInt::operator>( BigUInt x){
     if(this->size > x.get_value_length()){
         return true;
     }
@@ -143,7 +154,7 @@ bool BigUInt::operator>(BigUInt& x){
     return false;
 }
 
-bool BigUInt::operator>=(BigUInt& x){
+bool BigUInt::operator>=( BigUInt x){
     if(this->size > x.get_value_length()){
         return true;
     }
@@ -161,7 +172,7 @@ bool BigUInt::operator>=(BigUInt& x){
     return true;
 }
 
-bool BigUInt::operator<(BigUInt& x){
+bool BigUInt::operator<( BigUInt x){
     if(this->size < x.get_value_length()){
         return true;
     }
@@ -178,8 +189,7 @@ bool BigUInt::operator<(BigUInt& x){
     return false;
 }
 
-
-bool BigUInt::operator<=(BigUInt& x){
+bool BigUInt::operator<=( BigUInt x){
     if(this->size < x.get_value_length()){
         return true;
     }
@@ -197,14 +207,48 @@ bool BigUInt::operator<=(BigUInt& x){
     return true;
 }
 
+BigUInt BigUInt::operator+(const BigUInt & right){
+    uint64_t b = right.get_buffer_length();
+    int* v = new int[b];
+    uint64_t s;
+    if(this->size > right.get_value_length()){
+        s = this->size;
+    }
+    else{
+        s = right.get_value_length();
+    }
+
+    int carry = 0;
+    for(int i=0; i<s; i++)
+    {
+        int data = this->value[i]+right[i]+carry;
+        carry = data/10;
+        v[i] = data%10;
+    }
+
+    if(carry > 0){
+        v[s] = carry;
+        s++;
+    }
+
+    return BigUInt(v, b, s);
+}
+
+// BigUInt BigUInt::operator-(const BigUInt right){
+//     uint64_t b = 10;
+//     int* v = new int[b];
+//     uint64_t s = 0;
+
+//     return BigUInt(v, b, s);
+// }
 
 std::string BigUInt::to_string(){
-    if(size == 0){
+    if(this->size == 0){
         return std::string("0");
     }
 
     std::string res;
-    for(int i=0; i < size; i++){
+    for(int i=0; i < this->size; i++){
         res += std::to_string( value[size-1-i] );
     }
     return res;
@@ -214,23 +258,19 @@ std::string BigUInt::to_string(){
 
 
 int main(){
-    BigNumber::BigUInt x,y,z;
+    // int* v = new int[10];
+    // uint64_t s = 1;
+    // uint64_t b = 10;
+    
+    BigNumber::BigUInt x,y;
     x=10;
-    y=10;
-    z=11;
-    if(x>=y){
-        std::cout << "true" << "\n";
-    }
-    else{
-        std::cout << "false" << "\n";
-    }
+    std::cout << y.to_string() << "\n";
 
-    if(z>=y){
-        std::cout << "true" << "\n";
-    }
-    else{
-        std::cout << "false" << "\n";
-    }
+    y=x+x;
+    y=x+x;
+
+    y=100;
+    std::cout << y.to_string() << "\n";
 
     return 0;
 }
