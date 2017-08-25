@@ -32,7 +32,7 @@ public:
 
     BigUInt operator+(const BigUInt&);
     BigUInt operator-(const BigUInt&);
-    // BigUInt operator*(BigUInt& right);
+    BigUInt operator*(BigUInt& right);
     // BigUInt operator/(BigUInt& right);
     // BigUInt operator%(BigUInt& right);
 
@@ -61,7 +61,7 @@ BigUInt::BigUInt(int* v, uint64_t b, uint64_t s){
 }
 
 BigUInt::~BigUInt(){
-    delete this->value;
+    delete[] this->value;
 }
 
 void BigUInt::operator=(unsigned int x){
@@ -82,7 +82,7 @@ void BigUInt::operator=(const BigUInt& x){
     this->size = x.get_value_length();
 
     if(this->value != nullptr){
-        delete this->value;
+        delete[] this->value;
     }
     this->value = new int[this->buffer];
 
@@ -245,6 +245,44 @@ BigUInt BigUInt::operator-(const BigUInt& right){
     return BigUInt(v, SIZE, s);
 }
 
+BigUInt BigUInt::operator*(BigUInt& right){
+    int* temp = new int[SIZE*2];
+    int* v = new int[SIZE];
+    for(int i=0; i<SIZE*2; i++){
+        temp[i] = 0;
+        v[i/2] = 0;
+    }
+
+    for (int i = 0; i < SIZE; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
+            temp[i + j] += this->value[i] * right[j];
+        }
+    }
+
+    for (int i = 0; i < SIZE*2-1; ++i) 
+    {
+        temp[i + 1] += temp[i] / BASE;
+        temp[i] %= BASE;
+    }
+
+    uint64_t s = SIZE*2;
+    while(temp[s-1] == 0 && s>0) s--;
+
+    // overflow
+    if(s>=SIZE){
+        s=0;
+    }
+    else{
+        for(int i=0;i<SIZE; i++)
+            v[i] = temp[i];
+    }
+
+    delete[] temp;
+    return BigUInt(v, SIZE, s);
+}
+
 std::string BigUInt::to_string(){
     if(this->size == 0){
         return std::string("0");
@@ -262,9 +300,9 @@ std::string BigUInt::to_string(){
 
 int main(){
     BigNumber::BigUInt x,y,z;
-    x=999;
-    y=234;
-    z=x-y;
+    x=9;
+    y=9;
+    z=x*y;
 
     std::cout << z.to_string() << "\n";
 
