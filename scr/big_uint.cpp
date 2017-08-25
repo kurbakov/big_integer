@@ -187,9 +187,7 @@ bool BigUInt::operator<=(const BigUInt& x){
 
 BigUInt BigUInt::operator+(const BigUInt & right){
     int* v = new int[SIZE];
-    for(int i=0; i<SIZE; i++){
-        v[i]=0;
-    }
+    uint64_t s;
 
     int carry = 0;
     for(int i=0; i<SIZE; i++)
@@ -204,18 +202,17 @@ BigUInt BigUInt::operator+(const BigUInt & right){
         for(int i=0; i<SIZE; i++){
             v[i] = 0;
         }
-        return BigUInt(v, SIZE, 0);
+        s=0;
+    }
+    else{
+        s = SIZE;
+        while(v[s-1] == 0 && s > 0) s--;
     }
 
-    int idx = SIZE-1;
-    while(v[idx] == 0 && idx > 0) idx--;
-    if (idx != 0) idx++;
-
-    return BigUInt(v, SIZE, idx);
+    return BigUInt(v, SIZE, s);
 }
 
 BigUInt BigUInt::operator-(const BigUInt& right){
-    uint64_t b = SIZE;
     int* v = new int[SIZE];
     uint64_t s;
 
@@ -241,12 +238,11 @@ BigUInt BigUInt::operator-(const BigUInt& right){
         s=0;
     }
     else{
-        s = SIZE-1;
-        while(v[s] == 0 && s > 0) s--;
-        if (s!=0) s++;
+        s = SIZE;
+        while(v[s-1] == 0 && s > 0) s--;
     }
 
-    return BigUInt(v, b, s);
+    return BigUInt(v, SIZE, s);
 }
 
 std::string BigUInt::to_string(){
@@ -265,12 +261,8 @@ std::string BigUInt::to_string(){
 
 
 int main(){
-    // int* v = new int[10];
-    // uint64_t s = 1;
-    // uint64_t b = 10;
-    
     BigNumber::BigUInt x,y,z;
-    x=10;
+    x=999;
     y=234;
     z=x-y;
 
