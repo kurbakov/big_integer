@@ -33,7 +33,7 @@ public:
     BigUInt operator+(const BigUInt&);
     BigUInt operator-(const BigUInt&);
     BigUInt operator*(BigUInt& right);
-    // BigUInt operator/(BigUInt& right);
+    BigUInt operator/(BigUInt& right);
     // BigUInt operator%(BigUInt& right);
 
     // ostream &operator<<(BigUInt&);
@@ -283,6 +283,50 @@ BigUInt BigUInt::operator*(BigUInt& right){
     return BigUInt(v, SIZE, s);
 }
 
+// BigUInt BigUInt::operator/(BigUInt& right)
+// {
+//     int* res = new int[SIZE];
+//     int* curValue = new int[SIZE];
+//     for(int k=0; k<SIZE; k++){
+//         res[k]=0;
+//         curValue[k]=0;
+//     }
+
+//     for (int i = SIZE-1; i>=0; i--)
+//     {
+//         // level up
+//         for (int i=1; i<SIZE; i++){
+//             curValue[i] = curValue[i-1];
+//         }
+//         curValue[0] = this->value[i];
+
+//         // подбираем максимальное число x, такое что b * x <= curValue
+//         int x = 0;
+//         int l = 0;
+//         int r = BASE;
+//         while (l <= r)
+//         {
+//             int m = (l + r) >> 1;
+//             BigUInt cur = right*m;
+//             if (cur <= curValue)
+//             {
+//                 x = m;
+//                 l = m+1;
+//             }
+//             else{
+//                 r = m-1;
+//             }
+//         }
+//         res[i] = x;
+//         curValue = curValue - right * x;
+//     }
+
+//     uint64_t s = SIZE;
+//     while (res[s-1]==0 && s>0) s--;
+    
+//     return BigUInt(res, SIZE, s);
+// }
+
 std::string BigUInt::to_string(){
     if(this->size == 0){
         return std::string("0");
@@ -297,14 +341,35 @@ std::string BigUInt::to_string(){
 
 }; // namespace
 
+// =======================================================
+
+void division(int* left, int* right, int* result){
+    int* modulo = new int[SIZE];
+    for(int i=0; i<SIZE; i++){
+        modulo[i] = 0;
+    }
+    delete[] modulo;
+}
+
+//=======================================================
 
 int main(){
-    BigNumber::BigUInt x,y,z;
-    x=9;
-    y=9;
-    z=x*y;
+    int* x = new int[SIZE];
+    int* y = new int[SIZE];
+    int* res = new int[SIZE];
+    for (int i=0; i<SIZE; i++){
+        x[i]=0; y[i]=0; res[i]=0;
+    }
+    x[0]=5; x[1]=5; x[2]=5;
+    y[0]=1; y[1]=1; y[2]=1;
 
-    std::cout << z.to_string() << "\n";
+    division(x, y, res);
+
+    for(int k=0; k<SIZE; k++){
+        std::cout << res[k] <<" ";
+    }
+    std::cout << "\n";
+    
 
     return 0;
 }
