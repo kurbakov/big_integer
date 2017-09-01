@@ -132,12 +132,10 @@ BigUInt BigUInt::operator+(unsigned int right){
 BigUInt BigUInt::operator-(const BigUInt& right){
     int* v = new int[SIZE];
 
-
     int borrow = 0;
-    for(int i=0; i<SIZE; i++)
-    {
+    for(int i=0; i<SIZE; i++){
         int data = this->value[i]-(right[i]+borrow);
-        if(data<0) {
+        if(data<0){
             data += BASE;
             borrow = 1;
         }
@@ -173,16 +171,13 @@ BigUInt BigUInt::operator*(const BigUInt& right){
     int* temp = new int[SIZE*2];
     int* v = new int[SIZE];
 
-    for (int i = 0; i < SIZE; ++i) 
-    {
-        for (int j = 0; j < SIZE; ++j) 
-        {
+    for (int i = 0; i < SIZE; ++i){
+        for (int j = 0; j < SIZE; ++j){
             temp[i + j] += this->value[i] * right[j];
         }
     }
 
-    for (int i = 0; i < SIZE*2-1; ++i) 
-    {
+    for (int i = 0; i < SIZE*2-1; ++i){
         temp[i+1] += temp[i] / BASE;
         temp[i] %= BASE;
     }
@@ -220,13 +215,11 @@ BigUInt BigUInt::operator*(unsigned int right){
 
 BigUInt BigUInt::operator/(unsigned int right){
     int* v = new int[SIZE];
-
     int ost = 0;
-    for (int i=SIZE-1; i>=0; i--)
-    {
-      int cur = ost * BASE + this->value[i];
-      v[i] = cur / right;
-      ost = cur % right;
+    for (int i=SIZE-1; i>=0; i--){
+        int cur = ost * BASE + this->value[i];
+        v[i] = cur / right;
+        ost = cur % right;
     }
 
     uint64_t s = SIZE;
@@ -277,10 +270,9 @@ BigUInt BigUInt::operator/(const BigUInt& right){
 
 int BigUInt::operator%(unsigned int right){
     int ost = 0;
-    for (int i=SIZE; i>=0; i--)
-    {
-      int cur = ost * BASE + this->value[i];
-      ost = cur % right;
+    for (int i=SIZE; i>=0; i--){
+        int cur = ost * BASE + this->value[i];
+        ost = cur % right;
     }
     return ost;
 }
