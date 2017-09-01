@@ -194,24 +194,6 @@ bool BigUInt::operator<=(const BigUInt& x){
     return true;
 }
 
-BigUInt BigUInt::operator+(unsigned int right){
-    int* v = new int[SIZE];
-    
-    int pos = 0;
-    v[pos] = this->value[pos] + right;
-    
-    while (v[pos] >=  BASE){
-      v[pos+1]++;
-      v[pos] -= BASE;
-      pos++;
-    }
-
-    uint64_t s = SIZE;
-    while(v[s-1] == 0) s--;
-
-    return BigUInt(v, SIZE, s);
-}
-
 BigUInt BigUInt::operator+(const BigUInt & right){
     int* v = new int[SIZE];
     uint64_t s;
@@ -239,7 +221,11 @@ BigUInt BigUInt::operator+(const BigUInt & right){
     return BigUInt(v, SIZE, s);
 }
 
-BigUInt BigUInt::operator-(unsigned int){/* TODO!!! */}
+BigUInt BigUInt::operator+(unsigned int right){
+    BigUInt x;
+    x=right;
+    return *this+x;
+}
 
 BigUInt BigUInt::operator-(const BigUInt& right){
     int* v = new int[SIZE];
@@ -274,19 +260,10 @@ BigUInt BigUInt::operator-(const BigUInt& right){
     return BigUInt(v, SIZE, s);
 }
 
-BigUInt BigUInt::operator*(unsigned int right){
-    int* v = new int [SIZE];
-    int r = 0;
-    for (int i=0; i<SIZE; i++){
-        v[i] = this->value[i] * right + r;
-        r = v[i] / BASE;
-        v[i] -= r * BASE;
-    }
-    
-    uint64_t s = SIZE;
-    while(v[s-1] == 0) s--;
-
-    return BigUInt(v, SIZE, s);
+BigUInt BigUInt::operator-(unsigned int right){
+    BigUInt x;
+    x=right;
+    return *this-x;
 }
 
 BigUInt BigUInt::operator*(const BigUInt& right){
@@ -327,6 +304,21 @@ BigUInt BigUInt::operator*(const BigUInt& right){
     return BigUInt(v, SIZE, s);
 }
 
+BigUInt BigUInt::operator*(unsigned int right){
+    int* v = new int [SIZE];
+    int r = 0;
+    for (int i=0; i<SIZE; i++){
+        v[i] = this->value[i] * right + r;
+        r = v[i] / BASE;
+        v[i] -= r * BASE;
+    }
+    
+    uint64_t s = SIZE;
+    while(v[s-1] == 0) s--;
+
+    return BigUInt(v, SIZE, s);
+}
+
 std::string BigUInt::to_string(){
     if(this->size == 0){
         return std::string("0");
@@ -347,7 +339,7 @@ int main()
 {
     BigNumber::BigUInt x,y,z;
     x=10;
-    y=x+x;
+    y=x+102;
 
     std::cout << y.to_string() << "\n";
     return 0;
