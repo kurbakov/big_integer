@@ -1,65 +1,4 @@
-#include <iostream>
-#include <string>
-
-#define SIZE 10
-#define BASE 10
-
-namespace BigNumber{
-class BigUInt{
-private:
-    int* value;
-    uint64_t size;
-    void LevelUp()
-    {
-        for (int i = SIZE-1;i>=1;i--){
-            value[i] = value[i-1];
-        }
-        
-        size = SIZE;
-        while(value[size-1] && size>0) size--;
-    }
-
-public:
-    BigUInt();
-    BigUInt(int*, uint64_t);
-    BigUInt(const BigUInt&);
-
-    ~BigUInt();
-    uint64_t get_value_length() const {return size;}
-    int& operator[](unsigned int i) const {return value[i];}
-
-    void operator=(unsigned int);
-    void operator=(const BigUInt&);
-
-    bool operator==(const BigUInt&);
-    bool operator!=(const BigUInt&);
-    bool operator>(const BigUInt&);
-    bool operator>=(const BigUInt&);
-    bool operator<(const BigUInt&);
-    bool operator<=(const BigUInt&);
-
-    BigUInt operator+(unsigned int);
-    BigUInt operator+(const BigUInt&);
-
-    BigUInt operator-(unsigned int);
-    BigUInt operator-(const BigUInt&);
-
-    BigUInt operator*(unsigned int);
-    BigUInt operator*(const BigUInt&);
-
-    BigUInt operator/(unsigned int);
-    BigUInt operator/(const BigUInt&);
-    
-    int operator%(unsigned int);
-    BigUInt operator%(const BigUInt&);
-
-    // ostream &operator<<(const BigUInt&);
-    // istream &operator>>(const BigUInt&);
-
-    std::string to_string();
-};
-
-}; // namespace
+#include "big_uint.h"
 
 namespace BigNumber{
 BigUInt::BigUInt(){
@@ -88,13 +27,11 @@ void BigUInt::operator=(unsigned int x){
     for(int i=0; i<SIZE; i++){
         this->value[i] = 0;
     }
-    int idx = 0;
+    this->size = 0;
     while(x){
-        this->value[idx++] = x%BASE;
+        this->value[this->size++] = x%BASE;
         x /= BASE;
     }
-    this->size = SIZE;
-    while(this->value[this->size-1] == 0 && this->size > 0) this->size--;
 }
 
 void BigUInt::operator=(const BigUInt& x){
@@ -384,7 +321,6 @@ BigUInt BigUInt::operator%(const BigUInt& right){
     return curValue;
 }
 
-
 std::string BigUInt::to_string(){
     if(this->size == 0){
         return std::string("0");
@@ -398,14 +334,3 @@ std::string BigUInt::to_string(){
 }
 
 }; // namespace
-
-//=======================================================
-
-int main(){
-    BigNumber::BigUInt x,y;
-    x=20;
-    y=4101;
-
-    std::cout << (y%x).to_string() << "\n";
-    return 0;
-}
