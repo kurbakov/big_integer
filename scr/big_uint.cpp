@@ -14,6 +14,8 @@ private:
 public:
     BigUInt();
     BigUInt(int*, uint64_t, uint64_t);
+    BigUInt(const BigUInt&);
+
     ~BigUInt();
 
     uint64_t get_buffer_length() const {return buffer;}
@@ -67,6 +69,17 @@ BigUInt::BigUInt(int* v, uint64_t b, uint64_t s){
     this->value = v;
     this->buffer = b;
     this->size = s;
+}
+
+BigUInt::BigUInt(const BigUInt& right){
+    delete[] this->value;
+    this->value = new int[SIZE];
+    for(int i=0; i<SIZE; i++){
+        this->value[i] = right[i];
+    }
+    this->buffer = SIZE;
+    this->size = SIZE;
+    while(this->value[this->size-1] == 0) this->size--;
 }
 
 BigUInt::~BigUInt(){
@@ -339,7 +352,7 @@ int main()
 {
     BigNumber::BigUInt x,y,z;
     x=10;
-    y=x+102;
+    y=x*102;
 
     std::cout << y.to_string() << "\n";
     return 0;
