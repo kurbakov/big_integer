@@ -41,10 +41,10 @@ public:
     BigUInt operator*(unsigned int);
     BigUInt operator*(const BigUInt&);
 
-    // BigUInt operator/(unsigned int);
+    BigUInt operator/(unsigned int);
     // BigUInt operator/(const BigUInt&);
     
-    // BigUInt operator%(unsigned int);
+    int operator%(unsigned int);
     // BigUInt operator%(const BigUInt&);
 
     // ostream &operator<<(const BigUInt&);
@@ -332,6 +332,33 @@ BigUInt BigUInt::operator*(unsigned int right){
     return BigUInt(v, SIZE, s);
 }
 
+BigUInt BigUInt::operator/(unsigned int right){
+    int* v = new int[SIZE];
+
+    int ost = 0;
+    for (int i=SIZE-1; i>=0; i--)
+    {
+      int cur = ost * BASE + this->value[i];
+      v[i] = cur / right;
+      ost = cur % right;
+    }
+
+    uint64_t s = SIZE;
+    while(v[s-1] == 0) s--;
+
+    return BigUInt(v, SIZE, s);
+}
+
+int BigUInt::operator%(unsigned int right){
+    int ost = 0;
+    for (int i=SIZE; i>=0; i--)
+    {
+      int cur = ost * BASE + this->value[i];
+      ost = cur % right;
+    }
+    return ost;
+}
+
 std::string BigUInt::to_string(){
     if(this->size == 0){
         return std::string("0");
@@ -351,8 +378,8 @@ std::string BigUInt::to_string(){
 int main()
 {
     BigNumber::BigUInt x,y,z;
-    x=10;
-    y=x*102;
+    x=113;
+    y=x%10;
 
     std::cout << y.to_string() << "\n";
     return 0;
