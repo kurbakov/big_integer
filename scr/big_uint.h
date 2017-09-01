@@ -12,15 +12,7 @@ class BigUInt{
 private:
     int* value;
     uint64_t size;
-    void LevelUp()
-    {
-        for (int i = SIZE-1;i>=1;i--){
-            value[i] = value[i-1];
-        }
-        
-        size = SIZE;
-        while(value[size-1] && size>0) size--;
-    }
+    void LevelUp();
 
 public:
     BigUInt();

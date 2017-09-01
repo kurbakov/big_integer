@@ -23,6 +23,16 @@ BigUInt::~BigUInt(){
     delete[] this->value;
 }
 
+void BigUInt::LevelUp();
+{
+    for (int i = SIZE-1;i>=1;i--){
+        value[i] = value[i-1];
+    }
+    
+    size = SIZE;
+    while(value[size-1] && size>0) size--;
+}
+
 void BigUInt::operator=(unsigned int x){
     for(int i=0; i<SIZE; i++){
         this->value[i] = 0;
