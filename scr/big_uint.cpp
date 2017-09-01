@@ -48,7 +48,7 @@ public:
     BigUInt operator*(const BigUInt&);
 
     BigUInt operator/(unsigned int);
-    BigUInt operator/(const BigUInt&);
+    BigUInt operator/(BigUInt&);
     
     int operator%(unsigned int);
     // BigUInt operator%(const BigUInt&);
@@ -64,9 +64,6 @@ public:
 namespace BigNumber{
 BigUInt::BigUInt(){
     this->value = new int[SIZE];
-    for(int i=0; i<SIZE; i++){
-        this->value[i]=0;
-    }
     this->size = 0;
 }
 
@@ -91,9 +88,9 @@ void BigUInt::operator=(unsigned int x){
     for(int i=0; i<SIZE; i++){
         this->value[i] = 0;
     }
-
+    int idx = 0;
     while(x){
-        this->value[this->size] = x%BASE;
+        this->value[idx++] = x%BASE;
         x /= BASE;
     }
     this->size = SIZE;
@@ -101,7 +98,7 @@ void BigUInt::operator=(unsigned int x){
 }
 
 void BigUInt::operator=(const BigUInt& x){
-    for(int i=0; i<this->size; i++){
+    for(int i=0; i<SIZE; i++){
         this->value[i] = x[i];
     }
     this->size = SIZE;
@@ -238,10 +235,6 @@ BigUInt BigUInt::operator-(unsigned int right){
 BigUInt BigUInt::operator*(const BigUInt& right){
     int* temp = new int[SIZE*2];
     int* v = new int[SIZE];
-    for(int i=0; i<SIZE*2; i++){
-        temp[i] = 0;
-        v[i/2] = 0;
-    }
 
     for (int i = 0; i < SIZE; ++i) 
     {
@@ -305,11 +298,12 @@ BigUInt BigUInt::operator/(unsigned int right){
     return BigUInt(v, s);
 }
 
-BigUInt BigUInt::operator/(const BigUInt& right){
-    BigUInt res;
+BigUInt BigUInt::operator/(BigUInt& right){
+    int* res = new int[SIZE];
+
     BigUInt curValue;
     BigUInt temp;
-    int idx = this->size;
+    int idx = SIZE;
     for (int i=idx-1; i>=0; i--){
         curValue.LevelUp();
         curValue[0] = this->value[i];
@@ -322,6 +316,7 @@ BigUInt BigUInt::operator/(const BigUInt& right){
             
             temp=right;
             temp=temp*m;
+
             if (temp<=curValue){
                 x = m;
                 l = m+1;
@@ -330,14 +325,17 @@ BigUInt BigUInt::operator/(const BigUInt& right){
                 r = m-1;
             }
         }
-        std::cout << x << "\n";
-        res[i]=x;
+
+        res[i] = x;
         temp=right;
         temp=temp*x;
         curValue=curValue-temp;
     }
 
-    return res;
+    uint64_t s=SIZE;
+    while(res[s-1]==0 && s>0) s--;
+
+    return BigUInt(res,s);
 }
 
 int BigUInt::operator%(unsigned int right){
@@ -366,11 +364,10 @@ std::string BigUInt::to_string(){
 
 //=======================================================
 
-int main()
-{
+int main(){
     BigNumber::BigUInt x,y,z;
-    x=10;
-    y=200;
+    x=20;
+    y=4100;
 
     std::cout << (y/x).to_string() << "\n";
     return 0;
