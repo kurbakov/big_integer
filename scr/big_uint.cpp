@@ -23,8 +23,7 @@ BigUInt::~BigUInt(){
     delete[] this->value;
 }
 
-void BigUInt::LevelUp();
-{
+void BigUInt::LevelUp(){
     for (int i = SIZE-1;i>=1;i--){
         value[i] = value[i-1];
     }
@@ -329,7 +328,7 @@ std::string BigUInt::to_string(){
     }
 
     std::string res;
-    for(int i=0; i < this->size; i++){
+    for(int i=0; i<this->size; i++){
         res += std::to_string( value[size-1-i] );
     }
     return res;
