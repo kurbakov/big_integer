@@ -20,7 +20,7 @@ public:
     BigUInt(const BigUInt&);
 
     ~BigUInt();
-    uint64_t get_value_length() const {return size;}
+    uint64_t get_size() const {return size;}
     int& operator[](unsigned int i) const {return value[i];}
 
     void operator=(unsigned int);
@@ -47,9 +47,6 @@ public:
     
     int operator%(unsigned int);
     BigUInt operator%(const BigUInt&);
-
-    // ostream &operator<<(const BigUInt&);
-    // istream &operator>>(const BigUInt&);
 
     std::string to_string();
 };

@@ -254,7 +254,7 @@ BigUInt BigUInt::operator/(unsigned int right){
 BigUInt BigUInt::operator/(const BigUInt& right){
     BigUInt result;
     // division by 0
-    if(right.get_value_length()==0){
+    if(right.get_size()==0){
         return result;
     }
     int* res = new int[SIZE];
@@ -309,7 +309,7 @@ int BigUInt::operator%(unsigned int right){
 
 BigUInt BigUInt::operator%(const BigUInt& right){
     BigUInt curValue;
-    if(right.get_value_length()==0) return curValue;
+    if(right.get_size()==0) return curValue;
 
     int* res = new int[SIZE];
     
