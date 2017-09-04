@@ -3,6 +3,9 @@
 namespace BigNumber{
 BigUInt::BigUInt(){
     this->value = new int[SIZE];
+    for(int i=0; i<SIZE; i++){
+        this->value[i]=0;
+    }
     this->size = 0;
 }
 
@@ -12,6 +15,8 @@ BigUInt::BigUInt(int* v, uint64_t s){
 }
 
 BigUInt::BigUInt(const BigUInt& right){
+    this->value = new int[SIZE];
+
     for(int i=0; i<SIZE; i++){
         this->value[i] = right[i];
     }
@@ -328,7 +333,7 @@ std::string BigUInt::to_string(){
     }
 
     std::string res;
-    for(int i=0; i<this->size; i++){
+    for(uint64_t i=0; i<this->size; i++){
         res += std::to_string( value[size-1-i] );
     }
     return res;
