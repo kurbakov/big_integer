@@ -50,11 +50,10 @@ TEST(BigUInt, OperatorAssignInt){
 	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
 }
 
-
 TEST(BigUInt, OperatorAssignBigUInt){
-	BigNumber::BigUInt x,y ;
+	BigNumber::BigUInt x,y;
 	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
-	
+
 	x=12345;
 	y=x;
 	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
@@ -62,51 +61,73 @@ TEST(BigUInt, OperatorAssignBigUInt){
 	ASSERT_STRNE(x.to_string().c_str(), y.to_string().c_str());
 }
 
+TEST(BigUInt, OperatorEqual){
+	BigNumber::BigUInt x,y;
+	ASSERT_TRUE(x==y);
+	x=1;
+	ASSERT_FALSE(x==y);
+	y=1;
+	ASSERT_TRUE(x==y);
+}
 
-TEST(BigUInt, OperatorEqual){}
+TEST(BigUInt, OperatorNotEqual){
+	BigNumber::BigUInt x,y;
+	ASSERT_FALSE(x!=y);
+	x=1;
+	ASSERT_TRUE(x!=y);
+	y=1;
+	ASSERT_FALSE(x!=y);
+}
 
+TEST(BigUInt, OperatorGreater){
+	BigNumber::BigUInt x,y;
+	x=1;
+	ASSERT_TRUE(x>y);
+	y=1;
+	ASSERT_FALSE(x>y);
+}
 
-TEST(BigUInt, OperatorNotEqual){}
+TEST(BigUInt, OperatorGreaterEqual){
+	BigNumber::BigUInt x,y;
+	ASSERT_TRUE(x>=y);
+	x=1;
+	ASSERT_TRUE(x>=y);
+	ASSERT_FALSE(y>=x);
+}
 
+TEST(BigUInt, OperatorLower){
+	BigNumber::BigUInt x,y;
+	x=1;
+	ASSERT_TRUE(y<x);
+	y=1;
+	ASSERT_FALSE(y<x);
+	ASSERT_FALSE(y<y);
+}
 
-TEST(BigUInt, OperatorGreater){}
+TEST(BigUInt, OperatorLowerEqual){
+	BigNumber::BigUInt x,y;
+	ASSERT_TRUE(x<=y);
+	x=1;
+	ASSERT_FALSE(x<=y);
+	ASSERT_TRUE(y<=x);
+}
 
+// TEST(BigUInt, OperatorAddInt){}
 
-TEST(BigUInt, OperatorGreaterEqual){}
+// TEST(BigUInt, OperatorAddBigUInt){}
 
+// TEST(BigUInt, OperatorSubstractInt){}
 
-TEST(BigUInt, OperatorLower){}
+// TEST(BigUInt, OperatorSubstractBigUInt){}
 
+// TEST(BigUInt, OperatorMultiplyInt){}
 
-TEST(BigUInt, OperatorLowerequal){}
+// TEST(BigUInt, OperatorMultiplyBigUInt){}
 
+// TEST(BigUInt, OperatorDivideInt){}
 
-TEST(BigUInt, OperatorAddInt){}
+// TEST(BigUInt, OperatorDivideBigUInt){}
 
+// TEST(BigUInt, OperatorModuloInt){}
 
-TEST(BigUInt, OperatorAddBigUInt){}
-
-
-TEST(BigUInt, OperatorSubstractInt){}
-
-
-TEST(BigUInt, OperatorSubstractBigUInt){}
-
-
-TEST(BigUInt, OperatorMultiplyInt){}
-
-
-TEST(BigUInt, OperatorMultiplyBigUInt){}
-
-
-TEST(BigUInt, OperatorDivideInt){}
-
-
-TEST(BigUInt, OperatorDivideBigUInt){}
-
-
-TEST(BigUInt, OperatorModuloInt){}
-
-
-TEST(BigUInt, OperatorModuloBigUInt){}
-
+// TEST(BigUInt, OperatorModuloBigUInt){}
