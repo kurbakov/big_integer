@@ -112,9 +112,46 @@ TEST(BigUInt, OperatorLowerEqual){
 	ASSERT_TRUE(y<=x);
 }
 
-// TEST(BigUInt, OperatorAddInt){}
+TEST(BigUInt, OperatorAddInt){
+	BigNumber::BigUInt x,y;
 
-// TEST(BigUInt, OperatorAddBigUInt){}
+	x=x+0;
+	ASSERT_TRUE(x==y);
+	y=x+10; 	// y=10
+	x=10;		// x=10
+	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	
+	// simulate overflow the script should not fail
+	int rep=999999;
+	y=0;
+	x=0;
+	for(int i=0; i<rep; i++){
+		y=y+999999999;
+		x=x+999999999;
+		ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	}
+}
+
+TEST(BigUInt, OperatorAddBigUInt){
+	BigNumber::BigUInt x,y,z;
+
+	x=x+x;
+	ASSERT_TRUE(x==y);
+	y=10; 		// y=10
+	x=x+y;		// x=10
+	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	
+	// simulate overflow the script should not fail
+	int rep=999999;
+	y=0;
+	x=0;
+	z=999999;
+	for(int i=0; i<rep; i++){
+		x=x+z;
+		y=y+z;
+		ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	}
+}
 
 // TEST(BigUInt, OperatorSubstractInt){}
 
