@@ -122,7 +122,7 @@ TEST(BigUInt, OperatorAddInt){
 	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
 	
 	// simulate overflow the script should not fail
-	int rep=999999;
+	int rep=99999;
 	y=0;
 	x=0;
 	for(int i=0; i<rep; i++){
@@ -142,7 +142,7 @@ TEST(BigUInt, OperatorAddBigUInt){
 	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
 	
 	// simulate overflow the script should not fail
-	int rep=999999;
+	int rep=99999;
 	y=0;
 	x=0;
 	z=999999;
@@ -153,18 +153,123 @@ TEST(BigUInt, OperatorAddBigUInt){
 	}
 }
 
-// TEST(BigUInt, OperatorSubstractInt){}
+TEST(BigUInt, OperatorSubstractInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
+	x=x-5;
+	y=5;
+	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	x=x-5;
+	ASSERT_STREQ(x.to_string().c_str(), z.to_string().c_str());
+	for(int i=0; i<99; i++){
+		x=x-99;
+		ASSERT_STREQ(x.to_string().c_str(), z.to_string().c_str());
+	}
+}
 
-// TEST(BigUInt, OperatorSubstractBigUInt){}
+TEST(BigUInt, OperatorSubstractBigUInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
+	y=5;
+	x=x-y;
+	ASSERT_STREQ(x.to_string().c_str(), y.to_string().c_str());
+	x=x-y;
+	y=99;
+	ASSERT_STREQ(x.to_string().c_str(), z.to_string().c_str());
+	for(int i=0; i<99; i++){
+		x=x-y;
+		ASSERT_STREQ(x.to_string().c_str(), z.to_string().c_str());
+	}	
+}
 
-// TEST(BigUInt, OperatorMultiplyInt){}
+TEST(BigUInt, OperatorMultiplyInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
+	x=x*1;
+	y=x*10;
+	z=z*10;
+	ASSERT_STREQ(x.to_string().c_str(), "10");
+	ASSERT_STREQ(y.to_string().c_str(), "100");
+	ASSERT_STREQ(z.to_string().c_str(), "0");
+	x=x*0;
+	ASSERT_STREQ(x.to_string().c_str(), "0");
+}
 
-// TEST(BigUInt, OperatorMultiplyBigUInt){}
+TEST(BigUInt, OperatorMultiplyBigUInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
+	x=x*x;
+	y=x*x;
+	z=z*x;
+	ASSERT_STREQ(x.to_string().c_str(), "100");
+	ASSERT_STREQ(y.to_string().c_str(), "10000");
+	ASSERT_STREQ(z.to_string().c_str(), "0");
+}
 
-// TEST(BigUInt, OperatorDivideInt){}
+TEST(BigUInt, OperatorDivideInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
 
-// TEST(BigUInt, OperatorDivideBigUInt){}
+	// division 0: expect to return 0
+	y=x/0;
+	z=x/10;
+	x=x/99;
 
-// TEST(BigUInt, OperatorModuloInt){}
+	ASSERT_STREQ(x.to_string().c_str(), "0");
+	ASSERT_STREQ(y.to_string().c_str(), "0");
+	ASSERT_STREQ(z.to_string().c_str(), "1");
 
-// TEST(BigUInt, OperatorModuloBigUInt){}
+	x=123;
+	z=x/10;
+	ASSERT_STREQ(z.to_string().c_str(), "12");
+}
+
+TEST(BigUInt, OperatorDivideBigUInt){
+	BigNumber::BigUInt x,y,z;
+	x=10;
+
+	// division 0: expect to return 0
+	y=x/z;
+	ASSERT_STREQ(y.to_string().c_str(), "0");
+
+	z=x/x;
+	ASSERT_STREQ(z.to_string().c_str(), "1");
+	
+	y=99;
+	x=x/y;
+	ASSERT_STREQ(x.to_string().c_str(), "0");
+	
+	x=123;
+	y=10;
+	z=x/y;
+	ASSERT_STREQ(z.to_string().c_str(), "12");
+}
+
+TEST(BigUInt, OperatorModuloInt){
+	BigNumber::BigUInt x;
+	x=123;
+	ASSERT_EQ(x%10, 3);
+	ASSERT_EQ(x%2, 1);
+	ASSERT_EQ(x%11, 2);
+	ASSERT_EQ(x%0, 0);
+}
+
+TEST(BigUInt, OperatorModuloBigUInt){
+	BigNumber::BigUInt x,y,z;
+	x=123;
+	y=10;
+	z=x%y;
+	ASSERT_STREQ(z.to_string().c_str(), "3");
+
+	y=2;
+	z=x%y;
+	ASSERT_STREQ(z.to_string().c_str(), "1");
+
+	y=11;
+	z=x%y;
+	ASSERT_STREQ(z.to_string().c_str(), "2");
+
+	y=0;
+	z=x%y;
+	ASSERT_STREQ(z.to_string().c_str(), "0");	
+}

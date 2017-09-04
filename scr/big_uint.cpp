@@ -184,6 +184,10 @@ BigUInt BigUInt::operator-(unsigned int right){
 BigUInt BigUInt::operator*(const BigUInt& right){
     int* temp = new int[SIZE*2];
     int* v = new int[SIZE];
+    for(int i=0; i<SIZE*2; i++){
+        temp[i]=0;
+        v[i/2]=0;
+    }
 
     for (int i = 0; i < SIZE; ++i){
         for (int j = 0; j < SIZE; ++j){
@@ -228,6 +232,11 @@ BigUInt BigUInt::operator*(unsigned int right){
 }
 
 BigUInt BigUInt::operator/(unsigned int right){
+    BigUInt result;
+    if(right == 0){
+        return result;
+    }
+
     int* v = new int[SIZE];
     int ost = 0;
     for (int i=SIZE-1; i>=0; i--){
@@ -243,6 +252,11 @@ BigUInt BigUInt::operator/(unsigned int right){
 }
 
 BigUInt BigUInt::operator/(const BigUInt& right){
+    BigUInt result;
+    // division by 0
+    if(right.get_value_length()==0){
+        return result;
+    }
     int* res = new int[SIZE];
 
     BigUInt curValue;
@@ -283,6 +297,8 @@ BigUInt BigUInt::operator/(const BigUInt& right){
 }
 
 int BigUInt::operator%(unsigned int right){
+    if(right==0) return 0;
+
     int ost = 0;
     for (int i=SIZE; i>=0; i--){
         int cur = ost * BASE + this->value[i];
@@ -292,8 +308,11 @@ int BigUInt::operator%(unsigned int right){
 }
 
 BigUInt BigUInt::operator%(const BigUInt& right){
-    int* res = new int[SIZE];
     BigUInt curValue;
+    if(right.get_value_length()==0) return curValue;
+
+    int* res = new int[SIZE];
+    
     BigUInt temp;
     int idx = SIZE;
     for (int i=idx-1; i>=0; i--){
