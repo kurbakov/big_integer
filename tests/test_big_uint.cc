@@ -9,9 +9,6 @@ TEST(BigUInt, Constructor) {
 	BigNumber::BigUInt x;
 	BigNumber::BigUInt y(x);
 
-	int* v = new int[10];
-	BigNumber::BigUInt z(v, 10);
-
 	// memory leak
 	long long rep = 999999;
 	for(int i=0; i<rep; i++){ BigNumber::BigUInt num; }

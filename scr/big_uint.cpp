@@ -9,11 +9,6 @@ BigUInt::BigUInt(){
     this->size = 0;
 }
 
-BigUInt::BigUInt(int* v, uint64_t s){
-    this->value = v;
-    this->size = s;
-}
-
 BigUInt::BigUInt(const BigUInt& right){
     this->value = new int[SIZE];
 
@@ -33,6 +28,11 @@ void BigUInt::LevelUp(){
         value[i] = value[i-1];
     }
     
+    size = SIZE;
+    while(value[size-1] && size>0) size--;
+}
+
+void BigUInt::FixSize(){
     size = SIZE;
     while(value[size-1] && size>0) size--;
 }
@@ -111,30 +111,24 @@ bool BigUInt::operator<=(const BigUInt& x){
 }
 
 BigUInt BigUInt::operator+(const BigUInt & right){
-    int* v = new int[SIZE];
+    BigUInt result;
 
     int carry = 0;
     for(int i=0; i<SIZE; i++)
     {
         int data = this->value[i]+right[i]+carry;
         carry = data/BASE;
-        v[i] = data%BASE;
+        result[i] = data%BASE;
     }
     
-    uint64_t s;
     // if overflow return 0
     if(carry>0){
         for(int i=0; i<SIZE; i++){
-            v[i] = 0;
+            result[i] = 0;
         }
-        s=0;
     }
-    else{
-        s = SIZE;
-        while(v[s-1] == 0 && s > 0) s--;
-    }
-
-    return BigUInt(v, s);
+    result.FixSize();
+    return result;
 }
 
 BigUInt BigUInt::operator+(unsigned int right){
@@ -144,7 +138,7 @@ BigUInt BigUInt::operator+(unsigned int right){
 }
 
 BigUInt BigUInt::operator-(const BigUInt& right){
-    int* v = new int[SIZE];
+    BigUInt result;
 
     int borrow = 0;
     for(int i=0; i<SIZE; i++){
@@ -156,23 +150,17 @@ BigUInt BigUInt::operator-(const BigUInt& right){
         else{
             borrow = 0;
         }
-        v[i] = data;
+        result[i] = data;
     }
 
-    uint64_t s;
     //if overflow return 0
     if(borrow > 0){
         for(int i=0; i<SIZE; i++){
-            v[i] = 0;
+            result[i] = 0;
         }
-        s=0;
     }
-    else{
-        s = SIZE;
-        while(v[s-1] == 0 && s > 0) s--;
-    }
-
-    return BigUInt(v, s);
+    result.FixSize();
+    return result;
 }
 
 BigUInt BigUInt::operator-(unsigned int right){
@@ -182,11 +170,10 @@ BigUInt BigUInt::operator-(unsigned int right){
 }
 
 BigUInt BigUInt::operator*(const BigUInt& right){
+    BigUInt result;
     int* temp = new int[SIZE*2];
-    int* v = new int[SIZE];
     for(int i=0; i<SIZE*2; i++){
         temp[i]=0;
-        v[i/2]=0;
     }
 
     for (int i = 0; i < SIZE; ++i){
@@ -203,32 +190,30 @@ BigUInt BigUInt::operator*(const BigUInt& right){
     uint64_t s = SIZE*2;
     while(temp[s-1] == 0 && s>0) s--;
 
-    // overflow
-    if(s>=SIZE){
-        s=0;
+    if(s >= SIZE){
+        // overflow
     }
     else{
         for(int i=0;i<SIZE; i++)
-            v[i] = temp[i];
+            result[i] = temp[i];
     }
-
+    
+    result.FixSize();
     delete[] temp;
-    return BigUInt(v, s);
+    return result;
 }
 
 BigUInt BigUInt::operator*(unsigned int right){
-    int* v = new int [SIZE];
+    BigUInt result;
     int r = 0;
     for (int i=0; i<SIZE; i++){
-        v[i] = this->value[i] * right + r;
-        r = v[i] / BASE;
-        v[i] -= r * BASE;
+        result[i] = this->value[i] * right + r;
+        r = result[i] / BASE;
+        result[i] -= r * BASE;
     }
     
-    uint64_t s = SIZE;
-    while(v[s-1] == 0 && s>0) s--;
-
-    return BigUInt(v, s);
+    result.FixSize();
+    return result;
 }
 
 BigUInt BigUInt::operator/(unsigned int right){
@@ -237,18 +222,15 @@ BigUInt BigUInt::operator/(unsigned int right){
         return result;
     }
 
-    int* v = new int[SIZE];
     int ost = 0;
     for (int i=SIZE-1; i>=0; i--){
         int cur = ost * BASE + this->value[i];
-        v[i] = cur / right;
+        result[i] = cur / right;
         ost = cur % right;
     }
 
-    uint64_t s = SIZE;
-    while(v[s-1] == 0 && s>0) s--;
-
-    return BigUInt(v, s);
+    result.FixSize();
+    return result;
 }
 
 BigUInt BigUInt::operator/(const BigUInt& right){
@@ -257,7 +239,6 @@ BigUInt BigUInt::operator/(const BigUInt& right){
     if(right.get_size()==0){
         return result;
     }
-    int* res = new int[SIZE];
 
     BigUInt curValue;
     BigUInt temp;
@@ -284,16 +265,14 @@ BigUInt BigUInt::operator/(const BigUInt& right){
             }
         }
 
-        res[i] = x;
+        result[i] = x;
         temp=right;
         temp=temp*x;
         curValue=curValue-temp;
     }
 
-    uint64_t s=SIZE;
-    while(res[s-1]==0 && s>0) s--;
-
-    return BigUInt(res,s);
+    result.FixSize();
+    return result;
 }
 
 int BigUInt::operator%(unsigned int right){

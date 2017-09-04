@@ -13,10 +13,10 @@ private:
     int* value;
     uint64_t size;
     void LevelUp();
+    void FixSize();
 
 public:
     BigUInt();
-    BigUInt(int*, uint64_t);
     BigUInt(const BigUInt&);
 
     ~BigUInt();
